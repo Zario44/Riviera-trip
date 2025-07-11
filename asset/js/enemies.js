@@ -48,13 +48,16 @@ class Plane extends Enemy{
     }
 
     shoot(){
-        this.shootInterval = setInterval(() => {
-            const bullet = new CanonBall(pictures[1], this.x, this.y + this.img.height / 2, this.damage, -10);
-            
-            bullet.img.pictureLoad().then(() => {
-                ballAtUpload.push(bullet);
-            });
-        }, 4000);
+        const now = Date.now();
+        const recharge = 4000; // 4 seconds recharge time
+
+
+        if (now - this.shotTime >= recharge){ // Check if the last shot was more than 5 seconds ago
+            let ball = new CanonBall(pictures[1], this.x + this.img.width, this.y + this.img.height / 2, 1, 10);
+            ball.draw();
+            console.log(ball);
+            this.shotTime = now; // Update the last shot time
+        } 
     }
 
     destroy() {
