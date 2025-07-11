@@ -13,6 +13,7 @@ let playerAtUpload = [];
 let obstacleAtUpload = [];
 let lootAtUpload = []; 
 let enemyAtUpload = []; 
+let ennemyBulletAtUpload = []; 
 
 
 
@@ -65,6 +66,13 @@ function gameLoop(){
         obj.move();
     });
     enemyAtUpload = enemyAtUpload.filter(verif => !verif.destroyed); //
+
+    ennemyBulletAtUpload.forEach(obj=> { // Loop through each enemy bullet object
+        obj.draw();
+        obj.move();
+        obj.contact(); // Check for collisions with the player
+    });
+    ennemyBulletAtUpload = ennemyBulletAtUpload.filter(verif => !verif.destroyed); // Remove bullets that have been destroyed
 
     
 

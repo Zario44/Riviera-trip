@@ -46,7 +46,7 @@ class ShipPlayer{
 
 
         if (now - this.shotTime >= recharge){ // Check if the last shot was more than 5 seconds ago
-            let canonBall = new CanonBall(pictures[1], this.x + this.img.width, this.y + this.img.height / 2, 1, 10);
+            let canonBall = new CanonBall(pictures[1], this.x + this.img.width, this.y + this.img.height / 2, 1, 20);
             canonBall.draw();
             console.log(canonBall);
             this.shotTime = now; // Update the last shot time
@@ -119,7 +119,37 @@ class CanonBall{
                 }
             }
         });
+    }
 
+    destroy(){
+        this.destroyed = true; // Mark the object for destruction
+    }
+}
+
+
+class EnemyBullet extends CanonBall{
+    constructor(img, x, y, damage, speed){
+        super(img, x, y, damage, speed);
+    }
+
+    draw(){
+        if(!ennemyBulletAtUpload.includes(this)){ // Check if the image is already in the array
+            ennemyBulletAtUpload.push(this);// Add the image to the array
+        }
+
+        if (this.img.loaded && this.img.img instanceof HTMLImageElement) { // Check if the image is loaded and is an instance of HTMLImageElement
+            ctxGame.drawImage(this.img.img, this.x, this.y, this.img.width, this.img.height);
+        }
+        else{
+            this.img.pictureLoad().then(() => {
+                ctxGame.drawImage(this.img.img, this.x, this.y, this.img.width, this.img.height);
+            }).catch((error) => {
+                console.error("Erreur lors du chargement de l'image :", error);
+            });
+        }
+    }
+
+    contact(){
         playerAtUpload.forEach(player => {
             if (inCollision(this, player)) { // Check collision with player
                 player.hp -= this.damage;
@@ -129,10 +159,11 @@ class CanonBall{
                 }
             }
         });
-    }
 
-    destroy(){
-        this.destroyed = true; // Mark the object for destruction
+        enemyAtUpload.forEach(enemy => {
+            if (inCollision(this, enemy)) { // Check collision with enemy
+                return; // Do nothing if the bullet hits an enemy
+            }
+        });
     }
 }
-

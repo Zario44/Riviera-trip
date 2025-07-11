@@ -1,6 +1,6 @@
 class Enemy {
     img = null;
-    x = canvasGame.width + 50;
+    x = 0;
     y = 0;
     destroyed = false;
 
@@ -8,6 +8,7 @@ class Enemy {
         this.img = new Picture(img, 2); // Assuming img is a path to the image
         this.img.pictureLoad().then(() => {
             this.y = Math.random() * (canvasGame.height - this.img.height);
+            this.x = canvasGame.width - this.img.width - 50;
         });
     }
 
@@ -26,6 +27,11 @@ class Enemy {
                 console.error("Erreur lors du chargement de l'image :", error);
             });
         }
+    }
+
+    destroy() {
+        this.destroyed = true; // Mark the object for destruction
+        console.log("Enemy destroyed:", this);
     }
 }
 
@@ -48,20 +54,13 @@ class Plane extends Enemy{
     }
 
     shoot(){
-        const now = Date.now();
-        const recharge = 4000; // 4 seconds recharge time
-
-
-        if (now - this.shotTime >= recharge){ // Check if the last shot was more than 5 seconds ago
-            let ball = new CanonBall(pictures[1], this.x + this.img.width, this.y + this.img.height / 2, 1, 10);
-            ball.draw();
-            console.log(ball);
-            this.shotTime = now; // Update the last shot time
-        } 
-    }
-
-    destroy() {
-        this.destroyed = true; // Mark the object for destruction
+        this.shotInterval = setInterval(() => {
+            if (this.destroyed) return; // Stop shooting if the enemy is destroyed
+            const bullet = new EnemyBullet(pictures[1], this.x - 10, this.y + this.img.height / 2, this.damage, -10);
+            bullet.img.pictureLoad().then(() => {
+                ennemyBulletAtUpload.push(bullet);
+            });
+        }, 4000);
     }
 }
 
@@ -70,6 +69,7 @@ function spawnEnemy() {
         setTimeout(() => {
             let plane = new Plane(pictures[6]); // Create a new Plane enemy
             enemyAtUpload.push(plane); // Add the enemy to the enemy array
-        }, 20000); // Wait 20 seconds between spawning the enemy
+            console.log("New enemy spawned:", plane);
+        }, 2000); // Wait 20 seconds between spawning the enemy
     }
 }
