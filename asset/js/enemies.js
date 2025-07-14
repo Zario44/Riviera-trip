@@ -37,7 +37,7 @@ class Enemy {
 
 
 class Plane extends Enemy{
-    hp = 3;
+    hp = 1;
     damage = 1;
     speed = 2;
 

@@ -43,6 +43,7 @@ class Obstacle{
             if (inCollision(this, player)) {
                 this.destroy();
                 player.hp -= this.damage; // Reduce player's health by the obstacle's damage
+                damageShip(); // Call the function to handle player damage
                 console.log(`Player hit by obstacle! Remaining HP: ${player.hp}`);
             }
 

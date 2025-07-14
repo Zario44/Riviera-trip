@@ -6,6 +6,8 @@ canvasGame.width = window.innerWidth;
 canvasGame.height = window.innerHeight;
 const ctxGame = canvasGame.getContext("2d");
 
+const damagePlayer = document.querySelector(".damagePlayer");
+
 let gameOver = false; // Variable to track if the game is over
 
 let ballAtUpload = [];
@@ -16,6 +18,12 @@ let enemyAtUpload = [];
 let ennemyBulletAtUpload = []; 
 
 
+function damageShip(){
+    damagePlayer.style.display = "block"; // Show the damage overlay
+    setTimeout(() => {
+        damagePlayer.style.display = "none"; // Hide the damage overlay after 1 second
+    }, 200);
+}
 
 function gameLoop(){
     if (gameOver) {
@@ -106,7 +114,7 @@ play.addEventListener("click", function(){
     if (event.key === "ArrowUp" || event.key === "ArrowDown") {
         player.shift = 0;
     }
-});
+    });
     
     gameLoop(); // Start the game loop
     spawnObstacle(); // Call the function to spawn obstacles
