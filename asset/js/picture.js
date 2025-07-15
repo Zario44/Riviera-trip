@@ -8,6 +8,12 @@ let pictures = [
     "asset/picture/plane.png",
 ]
 
+let heartPicture = [
+    "asset/picture/heart-bg.png",
+    "asset/picture/heart.png",
+    "asset/picture/half_heart.png",
+]
+
 
 class Picture{
     picture = "";

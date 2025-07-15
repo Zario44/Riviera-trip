@@ -10,20 +10,19 @@ const damagePlayer = document.querySelector(".damagePlayer");
 
 let gameOver = false; // Variable to track if the game is over
 
+const heartFull  = new Picture(heartPicture[1], 5);
+const heartHalf  = new Picture(heartPicture[2], 5);
+
+Promise.all([heartFull.pictureLoad(), heartHalf.pictureLoad()]); // Load the heart images
+
 let ballAtUpload = [];
 let playerAtUpload = [];
+let heartAtUpload = [];
 let obstacleAtUpload = [];
 let lootAtUpload = []; 
 let enemyAtUpload = []; 
 let ennemyBulletAtUpload = []; 
 
-
-function damageShip(){
-    damagePlayer.style.display = "block"; // Show the damage overlay
-    setTimeout(() => {
-        damagePlayer.style.display = "none"; // Hide the damage overlay after 1 second
-    }, 200);
-}
 
 function gameLoop(){
     if (gameOver) {
@@ -33,16 +32,6 @@ function gameLoop(){
         return; // Stop the game loop if the game is over
     }
     ctxGame.clearRect(0, 0, canvasGame.width, canvasGame.height); // Clear the canvas
-
-    playerAtUpload.forEach(obj=> { // Loop through each player object
-        obj.draw();
-        obj.move();
-        obj.lose(); // Check if the player has lost
-
-        ctxGame.fillStyle = "yellow";
-        ctxGame.font = "20px Arial";
-        ctxGame.fillText(`Vies: ${obj.hp}`, 10, 40);
-    }); 
 
     ballAtUpload.forEach(obj=> { // Loop through each ball object
         obj.draw();
@@ -82,7 +71,20 @@ function gameLoop(){
     });
     ennemyBulletAtUpload = ennemyBulletAtUpload.filter(verif => !verif.destroyed); // Remove bullets that have been destroyed
 
-    
+    playerAtUpload.forEach(obj=> { // Loop through each player object
+        obj.draw();
+        obj.move();
+        obj.lose(); // Check if the player has lost
+
+        ctxGame.fillStyle = "yellow";
+        ctxGame.font = "20px Arial";
+        ctxGame.fillText(`Vies: ${obj.hp}`, 10, 40);
+
+        life.displayLife(obj.hp); // Update the player's life hearts
+        life.draw(); // Draw the player's life hearts
+
+        obj.cooldownBar(); // Draw the cooldown bar for the player's cannon shot
+    }); 
 
     requestAnimationFrame(gameLoop); // Call the game loop again
 }
@@ -95,8 +97,11 @@ play.addEventListener("click", function(){
 
     // Load the image and draw it on the canvas
     player.draw();
+
+    life = new PlayerLife(player); // Create a new PlayerLife object
         
     window.addEventListener("keydown", function(event) {
+        if (gameOver) return; // Ignore key presses if the game is over
         switch (event.key) {
             case " ":
                 player.canonShot();
@@ -116,7 +121,7 @@ play.addEventListener("click", function(){
     }
     });
     
-    gameLoop(); // Start the game loop
     spawnObstacle(); // Call the function to spawn obstacles
     spawnEnemy(); // Call the function to spawn enemies
+    gameLoop(); // Start the game loop
 });

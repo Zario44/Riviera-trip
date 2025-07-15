@@ -1,38 +1,3 @@
-function inCollision(a, b) { // Check if two objects are colliding
-    if (a.img && b.img) { // Check if both objects have images
-        return (
-            a.x < b.x + b.img.width &&
-            a.x + a.img.width > b.x &&
-            a.y < b.y + b.img.height &&
-            a.y + a.img.height > b.y
-        );
-    } 
-    if (a.img && !b.img) { // Check if only the first object has an image
-        return (
-            a.x < b.x + b.width &&
-            a.x + a.img.width > b.x &&
-            a.y < b.y + b.height &&
-            a.y + a.img.height > b.y
-        );
-    }
-    if (!a.img && b.img) { // Check if only the second object has an image
-        return (
-            a.x < b.x + b.img.width &&
-            a.x + a.width > b.x &&
-            a.y < b.y + b.img.height &&
-            a.y + a.height > b.y
-        );
-    }
-    if (!a.img && !b.img) { // Check if neither object has an image
-        return (
-            a.x < b.x + b.width &&
-            a.x + a.width > b.x &&
-            a.y < b.y + b.height &&
-            a.y + a.height > b.y
-        );
-    }    
-}
-
 class Obstacle{
 
     x = canvasGame.width; // Start at the right edge of the canvas
@@ -312,12 +277,13 @@ function spawnObstacle(){
             else if(Math.random() <= 0.95){
                 let barrel = new Barrel(pictures[3], 2); // Create a new Barrel obstacle
                 obstacleAtUpload.push(barrel); // Add the barrel to the obstacle array
+                console.log(obstacleAtUpload);
                 return barrel; // Return the barrel object
             }
             else {
                 let wave = new Wave(300); // Create a new Wave obstacle
                 obstacleAtUpload.push(wave); // Add the wave to the obstacle array
-                console.log(obstacleAtUpload);
+                
                 return wave; // Return the wave object
             }
         }

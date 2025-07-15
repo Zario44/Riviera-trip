@@ -13,10 +13,6 @@ class Enemy {
     }
 
     draw(){
-        if(!enemyAtUpload.includes(this)){ // Check if the image is already in the array
-            enemyAtUpload.push(this);// Add the image to the array
-        }
-
         if (this.img.loaded && this.img.img instanceof HTMLImageElement) { // Check if the image is loaded and is an instance of HTMLImageElement
             ctxGame.drawImage(this.img.img, this.x, this.y, this.img.width, this.img.height);
         }
@@ -30,8 +26,13 @@ class Enemy {
     }
 
     destroy() {
+        console.log("Enemies:", enemyAtUpload);
         this.destroyed = true; // Mark the object for destruction
+        if (this.shotInterval) {
+            clearInterval(this.shotInterval);// Clear the shooting interval if it exists
+        }
         console.log("Enemy destroyed:", this);
+        console.log("Remaining enemies:", enemyAtUpload);
     }
 }
 
@@ -65,8 +66,10 @@ class Plane extends Enemy{
 }
 
 function spawnEnemy() {
+    if (gameOver) return; // Stop spawning enemies if the game is over
     if (enemyAtUpload.length === 0) { 
-        setTimeout(() => {
+        setInterval(() => {
+            if (enemyAtUpload.length === 1) return; // Stop spawning if there are already enemies
             let plane = new Plane(pictures[6]); // Create a new Plane enemy
             enemyAtUpload.push(plane); // Add the enemy to the enemy array
             console.log("New enemy spawned:", plane);
