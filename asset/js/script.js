@@ -76,9 +76,9 @@ function gameLoop(){
         obj.move();
         obj.lose(); // Check if the player has lost
 
-        ctxGame.fillStyle = "yellow";
+        /*ctxGame.fillStyle = "yellow";
         ctxGame.font = "20px Arial";
-        ctxGame.fillText(`Vies: ${obj.hp}`, 10, 40);
+        ctxGame.fillText(`Vies: ${obj.hp}`, 10, 40);*/
 
         life.displayLife(obj.hp); // Update the player's life hearts
         life.draw(); // Draw the player's life hearts

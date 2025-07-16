@@ -57,22 +57,30 @@ class Plane extends Enemy{
     shoot(){
         this.shotInterval = setInterval(() => {
             if (this.destroyed) return; // Stop shooting if the enemy is destroyed
-            const bullet = new EnemyBullet(pictures[1], this.x - 10, this.y + this.img.height / 2, this.damage, -10);
+            const bullet = new EnemyBullet(pictures[1], this.x - 10, this.y + this.img.height / 2, this.damage, -20);
             bullet.img.pictureLoad().then(() => {
                 ennemyBulletAtUpload.push(bullet);
             });
-        }, 4000);
+        }, 3500);
     }
 }
 
 function spawnEnemy() {
-    if (gameOver) return; // Stop spawning enemies if the game is over
-    if (enemyAtUpload.length === 0) { 
-        setInterval(() => {
-            if (enemyAtUpload.length === 1) return; // Stop spawning if there are already enemies
-            let plane = new Plane(pictures[6]); // Create a new Plane enemy
-            enemyAtUpload.push(plane); // Add the enemy to the enemy array
-            console.log("New enemy spawned:", plane);
-        }, 2000); // Wait 20 seconds between spawning the enemy
-    }
+    if(gameOver) return; // Stop spawning if the game is over
+
+    let timer = null;
+
+
+    if (enemyAtUpload.length > 0) return; // Stop spawning if there are already enemies
+    if (timer !== null) return; // Prevent multiple timers from being set
+
+    timer = setInterval(() => {
+
+        let plane = new Plane(pictures[6]); // Create a new Plane enemy
+        enemyAtUpload.push(plane); // Add the enemy to the enemy array
+        console.log("New enemy spawned:", plane);
+
+        timer = null; // Clear the timer after spawning an enemy
+    }, 20000); // Wait 10 seconds between spawning the enemy
+
 }

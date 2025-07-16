@@ -63,8 +63,12 @@ class ShipPlayer{
         const barWidth = this.img.width - 20; // Width of the cooldown bar
         const barHeight = 10; // Height of the cooldown bar
         const barX = this.x + 10; // X position of the cooldown bar
-        const barY = this.y + this.img.height + 10; // Y position of the cooldown bar
+        let barY = this.y + this.img.height + 10; // Y position of the cooldown bar
         const radius = 5; // Radius of the corners of the cooldown bar
+
+        if (barY + barHeight > canvasGame.height) {
+            barY = this.y - 10; // Adjust the Y position if it goes out of bounds
+        }
 
         function drawRoundedRect(x, y, width, height, radius, fillColor, strokeColor) {
             ctxGame.beginPath();
