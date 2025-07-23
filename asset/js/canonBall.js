@@ -88,16 +88,16 @@ class EnemyBullet extends CanonBall{
     }
 
     contact(){
-        playerAtUpload.forEach(player => {
-            if (inCollision(this, player)) { // Check collision with player
-                player.hp -= this.damage;
-                damageShip();
-                this.destroy(); // Destroy the ball after contact
-                if (player.hp <= 0) {
-                    player.lose(); // Destroy the player if its HP is 0 or less
-                }
+    
+        if (inCollision(this, playerAtUpload)) { // Check collision with player
+            playerAtUpload.hp -= this.damage;
+            damageShip();
+            this.destroy(); // Destroy the ball after contact
+            if (playerAtUpload.hp <= 0) {
+                playerAtUpload.lose(); // Destroy the player if its HP is 0 or less
             }
-        });
+        }
+    
 
         enemyAtUpload.forEach(enemy => {
             if (inCollision(this, enemy)) { // Check collision with enemy

@@ -4,15 +4,14 @@ class Obstacle{
     y = 0;
 
     collision(){
-        playerAtUpload.forEach(player => {
-            if (inCollision(this, player)) {
-                this.destroy();
-                player.hp -= this.damage; // Reduce player's health by the obstacle's damage
-                damageShip(); // Call the function to handle player damage
-                console.log(`Player hit by obstacle! Remaining HP: ${player.hp}`);
-            }
 
-        });
+        if (inCollision(this, playerAtUpload)) {
+            this.destroy();
+            playerAtUpload.hp -= this.damage; // Reduce player's health by the obstacle's damage
+            damageShip(); // Call the function to handle player damage
+            console.log(`Player hit by obstacle! Remaining HP: ${playerAtUpload.hp}`);
+        }
+
 
         ballAtUpload.forEach(ball => {
             if (inCollision(this, ball) && this.powerOrder > ball.powerOrder) {
@@ -101,7 +100,7 @@ class Log extends Obstacle{
 class Wave extends Obstacle{
     powerOrder = 2;
     img = null;
-    speed = 6; 
+    speed = 8; 
     damage = 3;
     destroyed = false;
     height = 100; // Height of the wave
@@ -228,13 +227,13 @@ class Heart extends LootBarrel{
     }
 
     take(){
-        playerAtUpload.forEach(player => {
-            if (inCollision(this, player)) {
-                player.hp += 2;
-                console.log(`Heart taken! Player HP: ${player.hp}`);
-                this.destroy(); // Destroy the heart after taking it
-            }
-        });
+        
+        if (inCollision(this, playerAtUpload)) {
+            playerAtUpload.hp += 2;
+            console.log(`Heart taken! Player HP: ${playerAtUpload.hp}`);
+            this.destroy(); // Destroy the heart after taking it
+        }
+     
     }
 }
 
@@ -245,13 +244,13 @@ class Bomb extends LootBarrel{
     }
 
     explosion(){
-        playerAtUpload.forEach(player => {
-            if (inCollision(this, player)) {
-                player.hp -= 2; // Reduce player's health by 2
-                console.log(`Bomb exploded! Player HP: ${player.hp}`);
-                this.destroy(); // Destroy the bomb after explosion
-            }
-        });
+      
+        if (inCollision(this, playerAtUpload)) {
+            playerAtUpload.hp -= 2; // Reduce player's health by 2
+            console.log(`Bomb exploded! Player HP: ${playerAtUpload.hp}`);
+            this.destroy(); // Destroy the bomb after explosion
+        }
+
 
         obstacleAtUpload.forEach(obs => {
             if (inCollision(this, obs)) {
@@ -274,7 +273,7 @@ function spawnObstacle(){
                 obstacleAtUpload.push(log); // Add the log to the obstacle array
                 return log; // Return the log object
             }
-            else if(Math.random() <= 0.95){
+            else if(Math.random() <= 0.93){
                 let barrel = new Barrel(pictures[3], 2); // Create a new Barrel obstacle
                 obstacleAtUpload.push(barrel); // Add the barrel to the obstacle array
                 console.log(obstacleAtUpload);

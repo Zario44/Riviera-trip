@@ -9,6 +9,7 @@ const ctxGame = canvasGame.getContext("2d");
 const damagePlayer = document.querySelector(".damagePlayer");
 
 let gameOver = false; // Variable to track if the game is over
+let timer = null;
 
 const heartFull  = new Picture(heartPicture[1], 5);
 const heartHalf  = new Picture(heartPicture[2], 5);
@@ -16,7 +17,7 @@ const heartHalf  = new Picture(heartPicture[2], 5);
 Promise.all([heartFull.pictureLoad(), heartHalf.pictureLoad()]); // Load the heart images
 
 let ballAtUpload = [];
-let playerAtUpload = [];
+let playerAtUpload = null;
 let heartAtUpload = [];
 let obstacleAtUpload = [];
 let lootAtUpload = []; 
@@ -64,6 +65,8 @@ function gameLoop(){
     });
     enemyAtUpload = enemyAtUpload.filter(verif => !verif.destroyed); //
 
+    spawnEnemy(); // Call the function to spawn enemies
+
     ennemyBulletAtUpload.forEach(obj=> { // Loop through each enemy bullet object
         obj.draw();
         obj.move();
@@ -71,20 +74,20 @@ function gameLoop(){
     });
     ennemyBulletAtUpload = ennemyBulletAtUpload.filter(verif => !verif.destroyed); // Remove bullets that have been destroyed
 
-    playerAtUpload.forEach(obj=> { // Loop through each player object
-        obj.draw();
-        obj.move();
-        obj.lose(); // Check if the player has lost
 
-        /*ctxGame.fillStyle = "yellow";
-        ctxGame.font = "20px Arial";
-        ctxGame.fillText(`Vies: ${obj.hp}`, 10, 40);*/
+    playerAtUpload.draw();
+    playerAtUpload.move();
+    playerAtUpload.lose(); // Check if the player has lost
 
-        life.displayLife(obj.hp); // Update the player's life hearts
-        life.draw(); // Draw the player's life hearts
+    /*ctxGame.fillStyle = "yellow";
+    ctxGame.font = "20px Arial";
+    ctxGame.fillText(`Vies: ${obj.hp}`, 10, 40);*/
 
-        obj.cooldownBar(); // Draw the cooldown bar for the player's cannon shot
-    }); 
+    life.displayLife(playerAtUpload.hp); // Update the player's life hearts
+    life.draw(); // Draw the player's life hearts
+
+    playerAtUpload.cooldownBar(); // Draw the cooldown bar for the player's cannon shot
+   
 
     requestAnimationFrame(gameLoop); // Call the game loop again
 }
@@ -97,6 +100,7 @@ play.addEventListener("click", function(){
 
     // Load the image and draw it on the canvas
     player.draw();
+    playerAtUpload = player; // Add the player to the player array
 
     life = new PlayerLife(player); // Create a new PlayerLife object
         
@@ -122,6 +126,5 @@ play.addEventListener("click", function(){
     });
     
     spawnObstacle(); // Call the function to spawn obstacles
-    spawnEnemy(); // Call the function to spawn enemies
     gameLoop(); // Start the game loop
 });

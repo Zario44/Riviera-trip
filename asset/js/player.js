@@ -18,10 +18,6 @@ class ShipPlayer{
 
     draw(){
 
-        if(!playerAtUpload.includes(this)){ // Check if the image is already in the array
-            playerAtUpload.push(this);// Add the image to the array
-        }
-
         if (this.img.loaded && this.img.img instanceof HTMLImageElement) { // Check if the image is loaded and is an instance of HTMLImageElement
             ctxGame.drawImage(this.img.img, this.x, this.y, this.img.width, this.img.height);
         }
@@ -139,7 +135,6 @@ class PlayerLife{
             const x = this.x + (i-1) * 60;
             const y = this.y;
             this.heartCount.push({ img: heartHalf, x, y });
-            console.log("Odd HP, half heart added");
             
             if(hp < 1){
                 this.heartCount.pop(); // Remove the last heart if the player's HP is less than 1
