@@ -40,3 +40,10 @@ function inCollision(a, b) { // Check if two objects are colliding
     }    
 }
 
+
+function resizeCanvas() {
+  canvasGame.width = window.innerWidth;
+  canvasGame.height = window.innerHeight;
+}
+
+window.addEventListener("resize", resizeCanvas);
