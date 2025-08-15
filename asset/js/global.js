@@ -40,10 +40,19 @@ function inCollision(a, b) { // Check if two objects are colliding
     }    
 }
 
+function isTouchingObject(touchX, touchY, object) {
+    return (
+        touchX >= object.x &&
+        touchX <= object.x + object.width &&
+        touchY >= object.y &&
+        touchY <= object.y + object.height
+    );
+}
+
 
 function resizeCanvas() {
-  canvasGame.width = window.innerWidth;
-  canvasGame.height = window.innerHeight;
+    canvasGame.width = window.innerWidth;
+    canvasGame.height = window.innerHeight;
 }
 
 window.addEventListener("resize", resizeCanvas);

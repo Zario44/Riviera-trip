@@ -59,3 +59,58 @@ body{
     z-index: 999;
     background-color: #ff060658;
 }
+
+.touchPlayer{
+    position: absolute;
+    display: none;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    color: rgba(247, 87, 87, 0.347);
+    z-index: 1000;
+}
+
+.wrong-rotation{
+    position: fixed;
+    display: none;
+    padding: 2rem;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: rgba(89, 89, 89, 0.704);
+    color: white;
+    font-size: 3rem;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    text-align: center;
+}
+
+@media screen and (orientation: portrait){
+    .game-area{
+        display: none;
+    }
+
+    .play-screen{
+        display: none;
+    }
+
+    .wrong-rotation{
+        display: flex;
+    }
+}
+
+@media screen and (orientation: landscape){
+    .game-area{
+        display: block;
+    }
+
+    .play-screen{
+        display: flex;
+    }
+
+    .wrong-rotation{
+        display: none;
+    }
+}

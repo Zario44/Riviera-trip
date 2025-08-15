@@ -7,6 +7,7 @@ canvasGame.height = window.innerHeight;
 const ctxGame = canvasGame.getContext("2d");
 
 const damagePlayer = document.querySelector(".damagePlayer");
+const playerTouchZone = document.getElementById("touchPlayer");
 
 let gameOver = false; // Variable to track if the game is over
 let timer = null;
@@ -119,11 +120,24 @@ play.addEventListener("click", function(){
         }
     }); 
 
+    canvasGame.addEventListener("touchstart", function(event) {
+        const touch = event.touches[0];
+        const rect = canvasGame.getBoundingClientRect(); // Get the canvas position on the screen
+        const x = touch.clientX - rect.left; // Calculate the x position relative to the canvas
+        const y = touch.clientY - rect.top; // Calculate the y position relative to the canvas
+
+        if (isTouchingObject(x, y, player)) {
+            
+        }
+    }, { passive: false }); // Prevent default touch behavior
+
     document.addEventListener("keyup", function (event) {
     if (event.key === "ArrowUp" || event.key === "ArrowDown") {
         player.shift = 0;
     }
     });
+
+
     
     spawnObstacle(); // Call the function to spawn obstacles
     gameLoop(); // Start the game loop
