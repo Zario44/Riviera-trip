@@ -36,7 +36,7 @@ class Obstacle{
             else if (inCollision(this, obs) && obs !== this && this.powerOrder === obs.powerOrder) {
                 this.destroy(); // Destroy twice obstacle if  equal power order
                 obs.destroy();
-                if (this instanceof Barrel || obs instanceof Barrel) { // If the obstacle is a Barrel, spawn loot
+                if (this instanceof Barrel && typeof this.loot === "function") { // If the obstacle is a Barrel, spawn loot
                     this.loot(); // Call the loot method to spawn loot
                 }
             }
@@ -266,25 +266,30 @@ function spawnObstacle(){
     const interval = 400; // Interval in milliseconds between obstacle spawns
     const value = 0.5; // Probability value for spawning a obstacle
 
+    
     setInterval(() => {
-        if (Math.random() <= value) { // Randomly decide whether to spawn an obstacle
-            if(Math.random() <= 0.8){
-                let log = new Log(pictures[2], 1); // Create a new Log obstacle
-                obstacleAtUpload.push(log); // Add the log to the obstacle array
-                return log; // Return the log object
-            }
-            else if(Math.random() <= 0.93){
-                let barrel = new Barrel(pictures[3], 2); // Create a new Barrel obstacle
-                obstacleAtUpload.push(barrel); // Add the barrel to the obstacle array
-                console.log(obstacleAtUpload);
-                return barrel; // Return the barrel object
-            }
-            else {
-                let wave = new Wave(300); // Create a new Wave obstacle
-                obstacleAtUpload.push(wave); // Add the wave to the obstacle array
-                
-                return wave; // Return the wave object
+        if (breakGame) return; // Stop spawning obstacles if the game is paused
+        else{
+            if (Math.random() <= value) { // Randomly decide whether to spawn an obstacle
+                if(Math.random() <= 0.8){
+                    let log = new Log(pictures[2], 1); // Create a new Log obstacle
+                    obstacleAtUpload.push(log); // Add the log to the obstacle array
+                    return log; // Return the log object
+                }
+                else if(Math.random() <= 0.93){
+                    let barrel = new Barrel(pictures[3], 2); // Create a new Barrel obstacle
+                    obstacleAtUpload.push(barrel); // Add the barrel to the obstacle array
+                    console.log(obstacleAtUpload);
+                    return barrel; // Return the barrel object
+                }
+                else {
+                    let wave = new Wave(300); // Create a new Wave obstacle
+                    obstacleAtUpload.push(wave); // Add the wave to the obstacle array
+                    
+                    return wave; // Return the wave object
+                }
             }
         }
     }, interval); // Set the interval for spawning obstacles
+    
 }

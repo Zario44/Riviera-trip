@@ -9,8 +9,14 @@ const ctxGame = canvasGame.getContext("2d");
 const damagePlayer = document.querySelector(".damagePlayer");
 const playerTouchZone = document.getElementById("touchPlayer");
 
+const stopBtn = document.getElementById("stopBtn");
+const stopScreen = document.getElementById("stopScreen");
+const restart = document.getElementById("restart-btn");
+
 let gameOver = false; // Variable to track if the game is over
 let timer = null;
+let breakGame = false;
+
 
 const heartFull  = new Picture(heartPicture[1], 5);
 const heartHalf  = new Picture(heartPicture[2], 5);
@@ -25,72 +31,90 @@ let lootAtUpload = [];
 let enemyAtUpload = []; 
 let ennemyBulletAtUpload = []; 
 
+stopBtn.addEventListener("click", function(){ // Pause the game
+    stopBtn.style.display = "none";
+    breakGame = true;
+    stopScreen.style.display = "flex";
+});
+
+restart.addEventListener("click", function(){ // Resume the game
+    stopBtn.style.display = "block";
+    breakGame = false;
+    stopScreen.style.display = "none";
+    requestAnimationFrame(gameLoop); // Resume the game loop
+});
+
 
 function gameLoop(){
-    if (gameOver) {
-        ctxGame.font = "48px Arial";
-        ctxGame.fillStyle = "red";
-        ctxGame.fillText("Game Over", canvasGame.width / 2 - 100, canvasGame.height / 2);
-        return; // Stop the game loop if the game is over
-    }
-    ctxGame.clearRect(0, 0, canvasGame.width, canvasGame.height); // Clear the canvas
-
-    ballAtUpload.forEach(obj=> { // Loop through each ball object
-        obj.draw();
-        obj.move();
-        obj.contact(); // Check for collisions with enemies
-    });
-     ballAtUpload = ballAtUpload.filter(verif => !verif.destroyed); 
-
-    obstacleAtUpload.forEach(obj=> { // Loop through each obstacle object
-        obj.draw();
-        obj.move();
-        obj.collision(); // Check for collisions
-    });
-    obstacleAtUpload = obstacleAtUpload.filter(verif => !verif.destroyed);
-
-    lootAtUpload.forEach(obj=> { // Loop through each loot object
-        obj.draw();
-        obj.move();
-        if (obj instanceof Heart) {
-            obj.take(); // Check if the heart is taken by the player
-        } else if (obj instanceof Bomb) {
-            obj.explosion(); // Check if the bomb explodes
+    if (breakGame) return; // Pause the game loop if the game is paused
+    else if (!breakGame) {
+        if (gameOver) {
+            ctxGame.font = "48px Arial";
+            ctxGame.fillStyle = "red";
+            ctxGame.fillText("Game Over", canvasGame.width / 2 - 100, canvasGame.height / 2);
+            return; // Stop the game loop if the game is over
         }
-    });
-    lootAtUpload = lootAtUpload.filter(verif => !verif.destroyed);
+        ctxGame.clearRect(0, 0, canvasGame.width, canvasGame.height); // Clear the canvas
 
-    enemyAtUpload.forEach(obj=> { // Loop through each enemy object
-        obj.draw(); 
-        obj.move();
-    });
-    enemyAtUpload = enemyAtUpload.filter(verif => !verif.destroyed); //
+        ballAtUpload.forEach(obj=> { // Loop through each ball object
+            obj.draw();
+            obj.move();
+            obj.contact(); // Check for collisions with enemies
+        });
+        ballAtUpload = ballAtUpload.filter(verif => !verif.destroyed); 
 
-    spawnEnemy(); // Call the function to spawn enemies
+        obstacleAtUpload.forEach(obj=> { // Loop through each obstacle object
+            obj.draw();
+            obj.move();
+            obj.collision(); // Check for collisions
+        });
+        obstacleAtUpload = obstacleAtUpload.filter(verif => !verif.destroyed);
 
-    ennemyBulletAtUpload.forEach(obj=> { // Loop through each enemy bullet object
-        obj.draw();
-        obj.move();
-        obj.contact(); // Check for collisions with the player
-    });
-    ennemyBulletAtUpload = ennemyBulletAtUpload.filter(verif => !verif.destroyed); // Remove bullets that have been destroyed
+        lootAtUpload.forEach(obj=> { // Loop through each loot object
+            obj.draw();
+            obj.move();
+            if (obj instanceof Heart) {
+                obj.take(); // Check if the heart is taken by the player
+            } else if (obj instanceof Bomb) {
+                obj.explosion(); // Check if the bomb explodes
+            }
+        });
+        lootAtUpload = lootAtUpload.filter(verif => !verif.destroyed);
+
+        enemyAtUpload.forEach(obj=> { // Loop through each enemy object
+            obj.draw(); 
+            obj.move();
+        });
+        enemyAtUpload = enemyAtUpload.filter(verif => !verif.destroyed); //
+
+        spawnEnemy(); // Call the function to spawn enemies
+
+        ennemyBulletAtUpload.forEach(obj=> { // Loop through each enemy bullet object
+            obj.draw();
+            obj.move();
+            obj.contact(); // Check for collisions with the player
+        });
+        ennemyBulletAtUpload = ennemyBulletAtUpload.filter(verif => !verif.destroyed); // Remove bullets that have been destroyed
 
 
-    playerAtUpload.draw();
-    playerAtUpload.move();
-    playerAtUpload.lose(); // Check if the player has lost
+        playerAtUpload.draw();
+        playerAtUpload.move();
+        playerAtUpload.lose(); // Check if the player has lost
 
-    /*ctxGame.fillStyle = "yellow";
-    ctxGame.font = "20px Arial";
-    ctxGame.fillText(`Vies: ${obj.hp}`, 10, 40);*/
+        /*ctxGame.fillStyle = "yellow";
+        ctxGame.font = "20px Arial";
+        ctxGame.fillText(`Vies: ${obj.hp}`, 10, 40);*/
 
-    life.displayLife(playerAtUpload.hp); // Update the player's life hearts
-    life.draw(); // Draw the player's life hearts
+        life.displayLife(playerAtUpload.hp); // Update the player's life hearts
+        life.draw(); // Draw the player's life hearts
 
-    playerAtUpload.cooldownBar(); // Draw the cooldown bar for the player's cannon shot
-   
+        playerAtUpload.cooldownBar(); // Draw the cooldown bar for the player's cannon shot
+    
 
-    requestAnimationFrame(gameLoop); // Call the game loop again
+        
+    }
+
+    requestAnimationFrame(gameLoop); // Call the gameLoop function again to create a loop
 }
 
 play.addEventListener("click", function(){
@@ -102,6 +126,8 @@ play.addEventListener("click", function(){
     // Load the image and draw it on the canvas
     player.draw();
     playerAtUpload = player; // Add the player to the player array
+
+    stopBtn.style.display = "block";
 
     life = new PlayerLife(player); // Create a new PlayerLife object
         

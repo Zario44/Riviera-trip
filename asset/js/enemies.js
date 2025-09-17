@@ -51,6 +51,8 @@ class Plane extends Enemy{
     }
 
     move() {
+// A MODIFIER
+
         const direction = 
 
         this.y = playerAtUpload.y; // Follow the player vertically
@@ -76,20 +78,23 @@ class Plane extends Enemy{
 let planeDesroy = true; // Variable to track if the plane has been destroyed
 
 function spawnEnemy() {
-    let ratioRecharge = Math.random();
+    if (breakGame) return; // Stop spawning enemies if the game is paused
+    else{
+        let ratioRecharge = Math.random();
 
-    if (ratioRecharge < 0.5){
-        ratioRecharge += 0.5; // Ensure a minimum recharge ratio
-    }
+        if (ratioRecharge < 0.5){
+            ratioRecharge += 0.5; // Ensure a minimum recharge ratio
+        }
 
-    if (planeDesroy){
-        planeDesroy = false; // Reset the variable after spawning a new enemy
+        if (planeDesroy){
+            planeDesroy = false; // Reset the variable after spawning a new enemy
 
-        setTimeout(() => {
-            let plane = new Plane(pictures[6]); // Create a new Plane enemy
-            enemyAtUpload.push(plane); // Add the enemy to the enemy array
-            console.log("New enemy spawned:", plane);
+            setTimeout(() => {
+                let plane = new Plane(pictures[6]); // Create a new Plane enemy
+                enemyAtUpload.push(plane); // Add the enemy to the enemy array
+                console.log("New enemy spawned:", plane);
 
-        }, ratioRecharge * 20000); // Wait between 10 and 20 seconds before spawning a new enemy
+            }, ratioRecharge * 20000); // Wait between 10 and 20 seconds before spawning a new enemy
+        }
     }
 }
