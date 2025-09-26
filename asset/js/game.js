@@ -11,8 +11,6 @@ class Game{
         player.draw();
         playerAtUpload = player; // Add the player to the player array
 
-        stopBtn.style.display = "block";
-
         life = new PlayerLife(player); // Create a new PlayerLife object
 
         spawnObstacle(); // Call the function to spawn obstacles
@@ -20,13 +18,11 @@ class Game{
     }
 
     breakGame(){
-        stopBtn.style.display = "none";
         breakGame = true;
         stopScreen.style.display = "flex";
     }
 
     resume(){
-        stopBtn.style.display = "block";
         breakGame = false;
         stopScreen.style.display = "none";
         requestAnimationFrame(gameLoop); // Resume the game loop
@@ -45,7 +41,7 @@ class Game{
         gameOverScreen.style.display = "none"; // Hide the game over screen
 
         planeDesroy = true; // Reset the plane destroyed variable
-        
+
         obstacleAtUpload = [];
         lootAtUpload = [];
         enemyAtUpload = [];
