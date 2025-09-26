@@ -11,11 +11,19 @@ const playerTouchZone = document.getElementById("touchPlayer");
 
 const stopBtn = document.getElementById("stopBtn");
 const stopScreen = document.getElementById("stopScreen");
-const restart = document.getElementById("restart-btn");
+const resume = document.getElementById("resume-btn");
+
+const gameOverScreen = document.getElementById("gameOverScreen");
+const restart = document.getElementById("restartGame");
 
 let gameOver = false; // Variable to track if the game is over
-let timer = null;
 let breakGame = false;
+
+let intervalId = null;
+let timoutId = null;
+
+let gameObject = null;
+let life = null;
 
 
 const heartFull  = new Picture(heartPicture[1], 5);
@@ -31,140 +39,141 @@ let lootAtUpload = [];
 let enemyAtUpload = []; 
 let ennemyBulletAtUpload = []; 
 
-stopBtn.addEventListener("click", function(){ // Pause the game
-    stopBtn.style.display = "none";
-    breakGame = true;
-    stopScreen.style.display = "flex";
+
+window.addEventListener("keydown", function(event) { // Listen for the Escape key to pause the game
+    if (event.key === "Escape") {
+        if (!breakGame) {
+            gameObject.breakGame();
+        }
+        else {
+            gameObject.resume();
+        }
+    }
 });
 
-restart.addEventListener("click", function(){ // Resume the game
-    stopBtn.style.display = "block";
-    breakGame = false;
-    stopScreen.style.display = "none";
-    requestAnimationFrame(gameLoop); // Resume the game loop
-});
+/*window.addEventListener("resize", function(){ // Adjust the canvas size when the window is resized
+    canvasGame.width = window.innerWidth;
+    canvasGame.height = window.innerHeight;
+    if (playerAtUpload) {
+        playerAtUpload.y = canvasGame.height / 2 - playerAtUpload.img.height / 2; // Center the player vertically
+    }
+    if (life) {
+        life.x = ctxGame.canvas.width / 2; // Center the life display horizontally
+    }
+});*/
 
+resume.addEventListener("click", function(){ // Resume the game
+    gameObject.resume();
+});
 
 function gameLoop(){
     if (breakGame) return; // Pause the game loop if the game is paused
     else if (!breakGame) {
         if (gameOver) {
-            ctxGame.font = "48px Arial";
-            ctxGame.fillStyle = "red";
-            ctxGame.fillText("Game Over", canvasGame.width / 2 - 100, canvasGame.height / 2);
-            return; // Stop the game loop if the game is over
+            gameObject.gameOverFonction(); // Call the game over function if the game is over
+            return;
         }
-        ctxGame.clearRect(0, 0, canvasGame.width, canvasGame.height); // Clear the canvas
+        else{
+            ctxGame.clearRect(0, 0, canvasGame.width, canvasGame.height); // Clear the canvas
 
-        ballAtUpload.forEach(obj=> { // Loop through each ball object
-            obj.draw();
-            obj.move();
-            obj.contact(); // Check for collisions with enemies
-        });
-        ballAtUpload = ballAtUpload.filter(verif => !verif.destroyed); 
+            ballAtUpload.forEach(obj=> { // Loop through each ball object
+                obj.draw();
+                obj.move();
+                obj.contact(); // Check for collisions with enemies
+            });
+            ballAtUpload = ballAtUpload.filter(verif => !verif.destroyed); 
 
-        obstacleAtUpload.forEach(obj=> { // Loop through each obstacle object
-            obj.draw();
-            obj.move();
-            obj.collision(); // Check for collisions
-        });
-        obstacleAtUpload = obstacleAtUpload.filter(verif => !verif.destroyed);
+            obstacleAtUpload.forEach(obj=> { // Loop through each obstacle object
+                obj.draw();
+                obj.move();
+                obj.collision(); // Check for collisions
+            });
+            obstacleAtUpload = obstacleAtUpload.filter(verif => !verif.destroyed);
 
-        lootAtUpload.forEach(obj=> { // Loop through each loot object
-            obj.draw();
-            obj.move();
-            if (obj instanceof Heart) {
-                obj.take(); // Check if the heart is taken by the player
-            } else if (obj instanceof Bomb) {
-                obj.explosion(); // Check if the bomb explodes
-            }
-        });
-        lootAtUpload = lootAtUpload.filter(verif => !verif.destroyed);
+            lootAtUpload.forEach(obj=> { // Loop through each loot object
+                obj.draw();
+                obj.move();
+                if (obj instanceof Heart) {
+                    obj.take(); // Check if the heart is taken by the player
+                } else if (obj instanceof Bomb) {
+                    obj.explosion(); // Check if the bomb explodes
+                }
+            });
+            lootAtUpload = lootAtUpload.filter(verif => !verif.destroyed);
 
-        enemyAtUpload.forEach(obj=> { // Loop through each enemy object
-            obj.draw(); 
-            obj.move();
-        });
-        enemyAtUpload = enemyAtUpload.filter(verif => !verif.destroyed); //
+            enemyAtUpload.forEach(obj=> { // Loop through each enemy object
+                obj.draw(); 
+                obj.move();
+            });
+            enemyAtUpload = enemyAtUpload.filter(verif => !verif.destroyed); //
 
-        spawnEnemy(); // Call the function to spawn enemies
+            spawnEnemy(); // Call the function to spawn enemies
 
-        ennemyBulletAtUpload.forEach(obj=> { // Loop through each enemy bullet object
-            obj.draw();
-            obj.move();
-            obj.contact(); // Check for collisions with the player
-        });
-        ennemyBulletAtUpload = ennemyBulletAtUpload.filter(verif => !verif.destroyed); // Remove bullets that have been destroyed
+            ennemyBulletAtUpload.forEach(obj=> { // Loop through each enemy bullet object
+                obj.draw();
+                obj.move();
+                obj.contact(); // Check for collisions with the player
+            });
+            ennemyBulletAtUpload = ennemyBulletAtUpload.filter(verif => !verif.destroyed); // Remove bullets that have been destroyed
 
 
-        playerAtUpload.draw();
-        playerAtUpload.move();
-        playerAtUpload.lose(); // Check if the player has lost
+            playerAtUpload.draw();
+            playerAtUpload.move();
+            playerAtUpload.lose(); // Check if the player has lost
 
-        /*ctxGame.fillStyle = "yellow";
-        ctxGame.font = "20px Arial";
-        ctxGame.fillText(`Vies: ${obj.hp}`, 10, 40);*/
+            /*ctxGame.fillStyle = "yellow";
+            ctxGame.font = "20px Arial";
+            ctxGame.fillText(`Vies: ${obj.hp}`, 10, 40);*/
 
-        life.displayLife(playerAtUpload.hp); // Update the player's life hearts
-        life.draw(); // Draw the player's life hearts
+            life.displayLife(playerAtUpload.hp); // Update the player's life hearts
+            life.draw(); // Draw the player's life hearts
 
-        playerAtUpload.cooldownBar(); // Draw the cooldown bar for the player's cannon shot
-    
-
+            playerAtUpload.cooldownBar(); // Draw the cooldown bar for the player's cannon shot
+        }
         
     }
 
     requestAnimationFrame(gameLoop); // Call the gameLoop function again to create a loop
 }
 
-play.addEventListener("click", function(){
-
-    startScreen.style.display = "none"; // Hide the start screen
-    const player = new ShipPlayer(6, 10, new Picture(pictures[0], 1)); // Set the onload event to draw the image once it has loaded
-    console.log(player);
-
-    // Load the image and draw it on the canvas
-    player.draw();
-    playerAtUpload = player; // Add the player to the player array
-
-    stopBtn.style.display = "block";
-
-    life = new PlayerLife(player); // Create a new PlayerLife object
-        
-    window.addEventListener("keydown", function(event) {
-        if (gameOver) return; // Ignore key presses if the game is over
-        switch (event.key) {
-            case " ":
-                player.canonShot();
-                break;
-            case "ArrowUp":
-                player.shift = -8;
-                break;
-            case "ArrowDown":
-                player.shift = 8;
-                break;
-        }
-    }); 
-
-    canvasGame.addEventListener("touchstart", function(event) {
-        const touch = event.touches[0];
-        const rect = canvasGame.getBoundingClientRect(); // Get the canvas position on the screen
-        const x = touch.clientX - rect.left; // Calculate the x position relative to the canvas
-        const y = touch.clientY - rect.top; // Calculate the y position relative to the canvas
-
-        if (isTouchingObject(x, y, player)) {
-            
-        }
-    }, { passive: false }); // Prevent default touch behavior
-
-    document.addEventListener("keyup", function (event) {
-    if (event.key === "ArrowUp" || event.key === "ArrowDown") {
-        player.shift = 0;
+window.addEventListener("keydown", function(event) { // Handle keydown events for player movement and shooting
+    if (gameOver) return; // Ignore key presses if the game is over
+    else if(breakGame) return; // Ignore key presses if the game is paused
+    switch (event.key) {
+        case " ":
+            playerAtUpload.canonShot();
+            break;
+        case "ArrowUp":
+            playerAtUpload.shift = -8;
+            break;
+        case "ArrowDown":
+            playerAtUpload.shift = 8;
+            break;
     }
+}); 
+
+document.addEventListener("keyup", function (event) { // Stop the player's movement when the arrow keys are released
+    if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+            playerAtUpload.shift = 0;
+        }
     });
 
+canvasGame.addEventListener("touchstart", function(event) {// Listen for touch events on the canvas
+    const touch = event.touches[0]; // Get the first touch point
+    const rect = canvasGame.getBoundingClientRect(); // Get the canvas position on the screen
+    const x = touch.clientX - rect.left; // Calculate the x position relative to the canvas
+    const y = touch.clientY - rect.top; // Calculate the y position relative to the canvas
 
-    
-    spawnObstacle(); // Call the function to spawn obstacles
-    gameLoop(); // Start the game loop
+    if (isTouchingObject(x, y, player)) {
+        
+    }
+}, { passive: false }); // Prevent default touch behavior
+
+play.addEventListener("click", function(){
+    gameObject = new Game();
+    gameObject.startGame(startScreen);
+});
+
+restart.addEventListener("click", function(){
+    gameObject.restart();
 });

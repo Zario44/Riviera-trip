@@ -22,14 +22,17 @@
         </canvas>
     </div>
 
-    <div class="stop-btn" id="stopBtn">
-        <button id="stop-btn" class="btn-stop">
-            <i class="fa-solid fa-pause"></i>
-        </button>
+    <div class="game-over-screen" id="gameOverScreen">
+        <div class="game-over-content">
+            <h1>Game Over</h1>
+            <button id="restartGame" class="btn-restart-game">Recommencer</button>
+        </div>
+
     </div>
 
+
     <div class="stop-screen" id="stopScreen">
-        <button id="restart-btn" class="btn-restart">
+        <button id="resume-btn" class="btn-resume">
             <p>Reprendre</p>
         </button>
     </div>
@@ -53,6 +56,7 @@
     <script src="asset/js/canonBall.js"></script>
     <script src="asset/js/obs.js"></script>
     <script src="asset/js/enemies.js"></script>
+    <script src="asset/js/game.js"></script>
     <script src="asset/js/script.js"></script>
 </body>
 </html>

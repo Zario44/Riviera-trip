@@ -78,7 +78,7 @@ class Plane extends Enemy{
 let planeDesroy = true; // Variable to track if the plane has been destroyed
 
 function spawnEnemy() {
-    if (breakGame) return; // Stop spawning enemies if the game is paused
+    if (breakGame || gameOver) return; // Stop spawning enemies if the game is paused
     else{
         let ratioRecharge = Math.random();
 
@@ -89,7 +89,7 @@ function spawnEnemy() {
         if (planeDesroy){
             planeDesroy = false; // Reset the variable after spawning a new enemy
 
-            setTimeout(() => {
+            timoutId = setTimeout(() => {
                 let plane = new Plane(pictures[6]); // Create a new Plane enemy
                 enemyAtUpload.push(plane); // Add the enemy to the enemy array
                 console.log("New enemy spawned:", plane);

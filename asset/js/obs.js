@@ -247,6 +247,7 @@ class Bomb extends LootBarrel{
       
         if (inCollision(this, playerAtUpload)) {
             playerAtUpload.hp -= 2; // Reduce player's health by 2
+            damageShip();
             console.log(`Bomb exploded! Player HP: ${playerAtUpload.hp}`);
             this.destroy(); // Destroy the bomb after explosion
         }
@@ -262,13 +263,12 @@ class Bomb extends LootBarrel{
 
 
 function spawnObstacle(){
-    if (gameOver) return; // Stop spawning obstacles if the game is over
     const interval = 400; // Interval in milliseconds between obstacle spawns
     const value = 0.5; // Probability value for spawning a obstacle
 
     
-    setInterval(() => {
-        if (breakGame) return; // Stop spawning obstacles if the game is paused
+    intervalId = setInterval(() => {
+        if (breakGame || gameOver) return; // Stop spawning obstacles if the game is paused
         else{
             if (Math.random() <= value) { // Randomly decide whether to spawn an obstacle
                 if(Math.random() <= 0.8){
@@ -290,6 +290,7 @@ function spawnObstacle(){
                 }
             }
         }
-    }, interval); // Set the interval for spawning obstacles
+    }, interval); // Set the interval for spawning obstacles 
+    
     
 }
