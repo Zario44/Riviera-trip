@@ -5,7 +5,7 @@ class Enemy {
     destroyed = false;
 
     constructor(img) {
-        this.img = new Picture(img, 2); // Assuming img is a path to the image
+        this.img = new Picture(img, 0.5); // Assuming img is a path to the image
         this.img.pictureLoad().then(() => {
             this.y = Math.random() * (canvasGame.height - this.img.height);
             this.x = canvasGame.width - this.img.width - 50;

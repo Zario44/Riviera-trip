@@ -8,7 +8,7 @@ class CanonBall{
     destroyed = false;
 
     constructor(img, x, y, damage, speed){
-        this.img = new Picture(img, 6); // Assuming img is a path to the image
+        this.img = new Picture(img, 0.15); // Assuming img is a path to the image
         this.x = x;
         this.damage = damage ;
         this.speed = speed;

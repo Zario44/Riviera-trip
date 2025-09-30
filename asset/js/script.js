@@ -26,8 +26,9 @@ let gameObject = null;
 let life = null;
 
 
-const heartFull  = new Picture(heartPicture[1], 5);
-const heartHalf  = new Picture(heartPicture[2], 5);
+const heartFull  = new Picture(heartPicture[1], 1);
+const heartHalf  = new Picture(heartPicture[2], 1);
+const heartempty  = new Picture(heartPicture[0], 1);
 
 Promise.all([heartFull.pictureLoad(), heartHalf.pictureLoad()]); // Load the heart images
 

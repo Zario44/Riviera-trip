@@ -3,26 +3,26 @@ let pictures = [
     "asset/picture/canon_ball.png",
     "asset/picture/log.png",
     "asset/picture/barrel.png",
-    "asset/picture/heart.png",
-    "asset/picture/bomb.png",
+    "asset/picture/lootHearth.png",
+    "asset/picture/dynamite.png",
     "asset/picture/plane.png",
 ]
 
 let heartPicture = [
-    "asset/picture/heart-bg.png",
-    "asset/picture/heart.png",
-    "asset/picture/half_heart.png",
+    "asset/picture/emptyHearth.png",
+    "asset/picture/fullHearth.png",
+    "asset/picture/halfHearthV1.png",
 ]
 
 
 class Picture{
     picture = "";
     loaded = false;
-    formatDivision = 1;
+    formatMult = 1;
 
-    constructor(picture, formatDivision){
+    constructor(picture, formatMult){
         this.picture = picture;
-        this.formatDivision = formatDivision;
+        this.formatMult = formatMult;
     }
     
     pictureLoad(){ // Method to load the image asynchronously
@@ -34,8 +34,8 @@ class Picture{
                 img.onload = () => {
                     this.img = img; // Return the image object when it has loaded
                     this.loaded = true;
-                    this.width = img.width/this.formatDivision;
-                    this.height = img.height/this.formatDivision;
+                    this.width = img.width*this.formatMult;
+                    this.height = img.height*this.formatMult;
                     resolve();
                 }
 

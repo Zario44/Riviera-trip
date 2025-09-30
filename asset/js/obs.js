@@ -182,7 +182,7 @@ class LootBarrel{
     destroyed = false;
 
     constructor(img, x, y){
-        this.img = new Picture(img, 3);
+        this.img = new Picture(img, 1.8);
         this.x = x; 
         this.y = y; 
     }
