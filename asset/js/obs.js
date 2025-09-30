@@ -229,7 +229,11 @@ class Heart extends LootBarrel{
     take(){
         
         if (inCollision(this, playerAtUpload)) {
-            playerAtUpload.hp += 2;
+            if (playerAtUpload.hp + 2 <= playerAtUpload.hpMax) {
+                playerAtUpload.hp += 2;
+            } else {
+                playerAtUpload.hp = playerAtUpload.hpMax; // Ensure HP does not exceed maximum
+            }
             console.log(`Heart taken! Player HP: ${playerAtUpload.hp}`);
             this.destroy(); // Destroy the heart after taking it
         }

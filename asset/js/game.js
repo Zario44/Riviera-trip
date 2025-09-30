@@ -31,7 +31,6 @@ class Game{
     gameOverFonction(){
         ctxGame.clearRect(0, 0, canvasGame.width, canvasGame.height); // Clear the canvas
         gameOverScreen.style.display = "flex"; // Show the game over screen
-        stopBtn.style.display = "none";
         return; // Stop the game loop if the game is over
     }
 

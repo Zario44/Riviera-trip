@@ -2,7 +2,7 @@ class ShipPlayer{
     x = 10;
     y = canvasGame.height / 2;
     hpMax = 6; // Maximum HP of the player
-    hp = 6;
+    hp = this.hpMax;
     power = 10;
     shift = 0; 
     shotTime = 0; // Initialize shotTime to 0
@@ -114,10 +114,12 @@ class PlayerLife{
 
     displayLife(hp){
         this.heartCount = []; // Reset the heart count array
+        let distance = 0
 
         if (hp % 2 === 0) { // If the maximum HP is even
            for (let i = 0; i < hp/2; i++){
                 const x = this.x + i * 60;
+                distance += this.x + i * 60;
                 const y = this.y;
                 this.heartCount.push({ img: heartFull, x, y });
                 
@@ -127,6 +129,7 @@ class PlayerLife{
             let i = 0
             for (i; i < Math.ceil(hp/2); i++){
                 const x = this.x + i * 60;
+                distance += this.x + i * 60;
                 const y = this.y;
                 this.heartCount.push({ img: heartFull, x, y });
          
@@ -140,6 +143,16 @@ class PlayerLife{
                 this.heartCount.pop(); // Remove the last heart if the player's HP is less than 1
             }
         }
+
+        let totalHearts = Math.ceil(playerAtUpload.hpMax / 2); // Calculate the total number of hearts based on maximum HP
+
+        let currentHearts = this.heartCount.length; // Get the current number of hearts displayed
+
+        for (let i = currentHearts; i < totalHearts; i++) { // Add empty hearts until reaching the total number of hearts
+            const x = this.x + i * 60;
+            const y = this.y;
+            this.heartCount.push({ img: heartempty, x, y });
+}
         
     }
 
