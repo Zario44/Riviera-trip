@@ -1,7 +1,7 @@
 class Game{
 
     lastSpawnEnnemy = Date.now();
-    intervalSpawn = 15000;
+    intervalSpawn = 5000;
     
 
     constructor(){

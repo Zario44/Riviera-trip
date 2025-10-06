@@ -42,9 +42,9 @@ class Enemy {
 class Plane extends Enemy{
     hp = 1;
     damage = 1;
-    speed = 2;
+    speed = 6;
     lastShoot = Date.now();
-    shotInterval = 3000; // Time in milliseconds between shots
+    shotInterval = 3500; // Time in milliseconds between shots
     
 
     constructor(img) {
@@ -55,26 +55,24 @@ class Plane extends Enemy{
     }
 
     move() {
-// A MODIFIER
 
-        //const direction = 
+        if (this.y < playerAtUpload.y) {
+            if (this.y + this.speed > playerAtUpload.y) this.y = playerAtUpload.y;
+            else this.y += this.speed;
+        }
+        else if (this.y > playerAtUpload.y) {
+            if (this.y - this.speed < playerAtUpload.y) this.y = playerAtUpload.y;
+            else this.y -= this.speed;
+        }
+        else this.y = playerAtUpload.y;
 
-        this.y = playerAtUpload.y; // Follow the player vertically
+        if (this.x > canvasGame.width - this.img.width - 50) this.x -= this.speed; // Move left until a certain point
+        else if (this.x < canvasGame.width - this.img.width - 50) this.x += this.speed; // Move right if it goes too far left
+
+        //this.y = playerAtUpload.y; // Follow the player vertically
     }
 
     shoot(){
-        /*if (this.shotInterval || breakGame) return; // Prevent multiple intervals or shooting when the game is paused
-        this.shotInterval = setInterval(() => {
-            if (this.destroyed) return; // Stop shooting if the enemy is destroyed
-            if (breakGame){
-       
-            }
-            
-            bullet.img.pictureLoad().then(() => {
-                ennemyBulletAtUpload.push(bullet);
-            });
-        }, 3500);*/
-
         if (Date.now() - this.lastShoot >= this.shotInterval && !breakGame && !gameOver){
             const bullet = new EnemyBullet(pictures[1], this.x - 10, this.y + this.img.height / 2, this.damage, -20);
             this.lastShoot = Date.now(); // Update the last spawn time
