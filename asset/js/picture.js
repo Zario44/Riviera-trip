@@ -5,7 +5,7 @@ let pictures = [
     "asset/picture/barrel.png",
     "asset/picture/lootHearth.png",
     "asset/picture/dynamite.png",
-    "asset/picture/plane.png",
+    "asset/picture/parrot.png",
 ]
 
 let heartPicture = [

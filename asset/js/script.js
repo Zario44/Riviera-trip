@@ -25,6 +25,11 @@ let timoutId = null;
 let gameObject = null;
 let life = null;
 
+let lastSpawnEnnemy = Date.now();
+let stratBreak = 0;
+let timeBreak = 0;
+
+let planeDesroy = true; // Variable to track if the plane has been destroyed
 
 const heartFull  = new Picture(heartPicture[1], 1);
 const heartHalf  = new Picture(heartPicture[2], 1);
@@ -105,10 +110,11 @@ function gameLoop(){
             enemyAtUpload.forEach(obj=> { // Loop through each enemy object
                 obj.draw(); 
                 obj.move();
+                obj.shoot();
             });
             enemyAtUpload = enemyAtUpload.filter(verif => !verif.destroyed); //
 
-            spawnEnemy(); // Call the function to spawn enemies
+            gameObject.spawnEnnemy(); // Call the function to spawn enemies
 
             ennemyBulletAtUpload.forEach(obj=> { // Loop through each enemy bullet object
                 obj.draw();

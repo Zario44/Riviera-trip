@@ -31,9 +31,11 @@ class Enemy {
         if (this.shotInterval) {
             clearInterval(this.shotInterval);// Clear the shooting interval if it exists
         }
+        lastSpawnEnnemy = Date.now(); // Update the last spawn time when an enemy is destroyed
         console.log("Enemy destroyed:", this);
         console.log("Remaining enemies:", enemyAtUpload);
     }
+    
 }
 
 
@@ -41,60 +43,50 @@ class Plane extends Enemy{
     hp = 1;
     damage = 1;
     speed = 2;
+    lastShoot = Date.now();
+    shotInterval = 3000; // Time in milliseconds between shots
+    
 
     constructor(img) {
         super(img);
         this.img.pictureLoad().then(() => {
             this.shoot(); // Start shooting when the Plane is created
         });
-
     }
 
     move() {
 // A MODIFIER
 
-        const direction = 
+        //const direction = 
 
         this.y = playerAtUpload.y; // Follow the player vertically
     }
 
     shoot(){
+        /*if (this.shotInterval || breakGame) return; // Prevent multiple intervals or shooting when the game is paused
         this.shotInterval = setInterval(() => {
             if (this.destroyed) return; // Stop shooting if the enemy is destroyed
-            const bullet = new EnemyBullet(pictures[1], this.x - 10, this.y + this.img.height / 2, this.damage, -20);
+            if (breakGame){
+       
+            }
+            
             bullet.img.pictureLoad().then(() => {
                 ennemyBulletAtUpload.push(bullet);
             });
-        }, 3500);
+        }, 3500);*/
+
+        if (Date.now() - this.lastShoot >= this.shotInterval && !breakGame && !gameOver){
+            const bullet = new EnemyBullet(pictures[1], this.x - 10, this.y + this.img.height / 2, this.damage, -20);
+            this.lastShoot = Date.now(); // Update the last spawn time
+            bullet.img.pictureLoad().then(() => { // Ensure the image is loaded before adding the bullet
+                ennemyBulletAtUpload.push(bullet);
+            });
+            timeBreak = 0;
+        }
     }
 
     destroy() {
         super.destroy(); // Call the parent destroy method
         planeDesroy = true; // Set the variable to true when the plane is destroyed
-    }
-}
-
-
-let planeDesroy = true; // Variable to track if the plane has been destroyed
-
-function spawnEnemy() {
-    if (breakGame || gameOver) return; // Stop spawning enemies if the game is paused
-    else{
-        let ratioRecharge = Math.random();
-
-        if (ratioRecharge < 0.5){
-            ratioRecharge += 0.5; // Ensure a minimum recharge ratio
-        }
-
-        if (planeDesroy){
-            planeDesroy = false; // Reset the variable after spawning a new enemy
-
-            timoutId = setTimeout(() => {
-                let plane = new Plane(pictures[6]); // Create a new Plane enemy
-                enemyAtUpload.push(plane); // Add the enemy to the enemy array
-                console.log("New enemy spawned:", plane);
-
-            }, ratioRecharge * 20000); // Wait between 10 and 20 seconds before spawning a new enemy
-        }
     }
 }
