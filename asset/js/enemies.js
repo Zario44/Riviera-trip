@@ -39,7 +39,7 @@ class Enemy {
 }
 
 
-class Plane extends Enemy{
+class Parrot extends Enemy{
     hp = 1;
     damage = 1;
     speed = 6;
@@ -50,7 +50,7 @@ class Plane extends Enemy{
     constructor(img) {
         super(img);
         this.img.pictureLoad().then(() => {
-            this.shoot(); // Start shooting when the Plane is created
+            this.shoot(); // Start shooting when the Parrot is created
         });
     }
 
@@ -85,6 +85,7 @@ class Plane extends Enemy{
 
     destroy() {
         super.destroy(); // Call the parent destroy method
-        planeDesroy = true; // Set the variable to true when the plane is destroyed
+        parrotDesroy = true; // Set the variable to true when the parrot is destroyed
+        scoreParrot = true; // Set the variable to true when a parrot is destroyed
     }
 }

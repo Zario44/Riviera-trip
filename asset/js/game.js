@@ -2,6 +2,9 @@ class Game{
 
     lastSpawnEnnemy = Date.now();
     intervalSpawn = 5000;
+    score = 0;
+    oldTimeScore = Date.now(); 
+    intervalScore = 600; // Interval in milliseconds to increase the score
     
 
     constructor(){
@@ -69,12 +72,12 @@ class Game{
     }
 
     spawnEnnemy(){
-        if (planeDesroy && Date.now() - lastSpawnEnnemy >= this.intervalSpawn && !breakGame && !gameOver){
+        if (parrotDesroy && Date.now() - lastSpawnEnnemy >= this.intervalSpawn && !breakGame && !gameOver){
             console.log(Date.now() - lastSpawnEnnemy);
-            planeDesroy = false; // Reset the variable after spawning a new enemy
-            let plane = new Plane(pictures[6]); // Create a new Plane enemy
+            parrotDesroy = false; // Reset the variable after spawning a new enemy
+            let parrot = new Parrot(pictures[6]); // Create a new Parrot enemy
             lastSpawnEnnemy = Date.now(); // Update the last spawn time
-            enemyAtUpload.push(plane); // Add the enemy to the enemy array
+            enemyAtUpload.push(parrot); // Add the enemy to the enemy array
 
             this.intervalSpawn = Math.random(); // Interval in milliseconds between enemy spawns
             if (this.intervalSpawn < 0.5){
@@ -84,7 +87,28 @@ class Game{
                 this.intervalSpawn *= 20000; // Scale the interval to a maximum of 20 seconds
             }
             timeBreak = 0; // Reset the time break after spawning an enemy
-            console.log("New enemy spawned:", plane);
+            console.log("New enemy spawned:", parrot);
         }        
+    }
+
+    scoreIncrement(){
+        if (Date.now() - this.oldTimeScore >= 1000 && !breakGame && !gameOver) { // Increase score every second
+            this.oldTimeScore = Date.now();
+            this.score += 1;
+        }
+        if (scoreObs) {
+            this.score += 5; // Increase score by 5 for destroying an obstacle
+            scoreObs = false; // Reset the variable after adding the score
+        }
+        if (scoreParrot){
+            this.score += 10; // Increase score by 10 for destroying a parrot
+            scoreParrot = false; // Reset the variable after adding the score
+        } 
+    }
+
+    displayScore(){
+        ctxGame.fillStyle = "white";
+        ctxGame.font = "20px Arial";
+        ctxGame.fillText(this.score, 10, 30); // Display the score at the top-left corner
     }
 }

@@ -29,7 +29,10 @@ let lastSpawnEnnemy = Date.now();
 let stratBreak = 0;
 let timeBreak = 0;
 
-let planeDesroy = true; // Variable to track if the plane has been destroyed
+let scoreObs = false;
+let scoreParrot = false;
+
+let parrotDesroy = true; // Variable to track if the parrot has been destroyed
 
 const heartFull  = new Picture(heartPicture[1], 1);
 const heartHalf  = new Picture(heartPicture[2], 1);
@@ -123,7 +126,6 @@ function gameLoop(){
             });
             ennemyBulletAtUpload = ennemyBulletAtUpload.filter(verif => !verif.destroyed); // Remove bullets that have been destroyed
 
-
             playerAtUpload.draw();
             playerAtUpload.move();
             playerAtUpload.lose(); // Check if the player has lost
@@ -134,6 +136,9 @@ function gameLoop(){
 
             life.displayLife(playerAtUpload.hp); // Update the player's life hearts
             life.draw(); // Draw the player's life hearts
+
+            gameObject.scoreIncrement(); // Increment the score based on time
+            gameObject.displayScore(); // Display the current score
 
             playerAtUpload.cooldownBar(); // Draw the cooldown bar for the player's cannon shot
         }

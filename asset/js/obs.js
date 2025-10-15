@@ -22,6 +22,7 @@ class Obstacle{
                 if (this instanceof Barrel) { // If the obstacle is a Barrel, spawn loot
                     this.loot(); // Call the loot method to spawn loot
                 }
+                scoreObs = true; // Set the variable to true when an obstacle is destroyed
             }      
         });
 
