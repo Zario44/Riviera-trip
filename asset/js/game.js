@@ -1,5 +1,6 @@
 class Game{
 
+    
     lastSpawnEnnemy = Date.now();
     intervalSpawn = 5000;
     score = 0;
@@ -21,6 +22,8 @@ class Game{
 
         life = new PlayerLife(player); // Create a new PlayerLife object
 
+        level = new Level();
+
         spawnObstacle(); // Call the function to spawn obstacles
         gameLoop(); // Start the game loop
     }
@@ -36,7 +39,7 @@ class Game{
         stopScreen.style.display = "none";
         requestAnimationFrame(gameLoop); // Resume the game loop
         timeBreak = Date.now() - stratBreak;
-        lastSpawnEnnemy -= timeBreak;
+        lastSpawnEnnemy += timeBreak; // Adjust the last spawn time to account for the pause
     }
 
     gameOverFonction(){
@@ -55,6 +58,8 @@ class Game{
         breakGame = false;
         gameOverScreen.style.display = "none"; // Hide the game over screen
 
+        this.score = 0; // Reset the score
+
         obstacleAtUpload = [];
         lootAtUpload = [];
         enemyAtUpload = [];
@@ -72,7 +77,7 @@ class Game{
     }
 
     spawnEnnemy(){
-        if (parrotDesroy && Date.now() - lastSpawnEnnemy >= this.intervalSpawn && !breakGame && !gameOver){
+        if (parrotDesroy && !level.parrotBoss && Date.now() - lastSpawnEnnemy >= this.intervalSpawn && !breakGame && !gameOver){
             console.log(Date.now() - lastSpawnEnnemy);
             parrotDesroy = false; // Reset the variable after spawning a new enemy
             let parrot = new Parrot(pictures[6]); // Create a new Parrot enemy
@@ -112,3 +117,4 @@ class Game{
         ctxGame.fillText(this.score, 10, 30); // Display the score at the top-left corner
     }
 }
+

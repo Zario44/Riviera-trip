@@ -34,6 +34,8 @@ let scoreParrot = false;
 
 let parrotDesroy = true; // Variable to track if the parrot has been destroyed
 
+let level = new Level();
+
 const heartFull  = new Picture(heartPicture[1], 1);
 const heartHalf  = new Picture(heartPicture[2], 1);
 const heartempty  = new Picture(heartPicture[0], 1);
@@ -47,6 +49,7 @@ let obstacleAtUpload = [];
 let lootAtUpload = []; 
 let enemyAtUpload = []; 
 let ennemyBulletAtUpload = []; 
+let bossAtUpload = [];
 
 
 window.addEventListener("keydown", function(event) { // Listen for the Escape key to pause the game
@@ -115,7 +118,15 @@ function gameLoop(){
                 obj.move();
                 obj.shoot();
             });
-            enemyAtUpload = enemyAtUpload.filter(verif => !verif.destroyed); //
+            enemyAtUpload = enemyAtUpload.filter(verif => !verif.destroyed); 
+
+            bossAtUpload.forEach(obj=> { // Loop through each boss object
+                obj.draw(); 
+                obj.move();
+                obj.shoot();
+                //obj.shootUpdate();
+            });
+            bossAtUpload = bossAtUpload.filter(verif => !verif.destroyed);
 
             gameObject.spawnEnnemy(); // Call the function to spawn enemies
 
@@ -136,6 +147,8 @@ function gameLoop(){
 
             life.displayLife(playerAtUpload.hp); // Update the player's life hearts
             life.draw(); // Draw the player's life hearts
+
+            level.parrotLevel1(); // Check and update the level based on parrot kills
 
             gameObject.scoreIncrement(); // Increment the score based on time
             gameObject.displayScore(); // Display the current score

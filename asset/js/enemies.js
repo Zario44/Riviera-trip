@@ -3,6 +3,8 @@ class Enemy {
     x = 0;
     y = 0;
     destroyed = false;
+    playerY = 0;
+    projetile = null;
 
     constructor(img) {
         this.img = new Picture(img, 0.5); // Assuming img is a path to the image
@@ -48,7 +50,7 @@ class Parrot extends Enemy{
     
 
     constructor(img) {
-        super(img);
+        super(img); // Call the parent constructor
         this.img.pictureLoad().then(() => {
             this.shoot(); // Start shooting when the Parrot is created
         });
@@ -74,11 +76,12 @@ class Parrot extends Enemy{
 
     shoot(){
         if (Date.now() - this.lastShoot >= this.shotInterval && !breakGame && !gameOver){
-            const bullet = new EnemyBullet(pictures[1], this.x - 10, this.y + this.img.height / 2, this.damage, -20);
+            this.projetile = new ParrotAttack(pictures[1], this.x - 10, this.y + this.img.height / 2, this.damage, -20);
             this.lastShoot = Date.now(); // Update the last spawn time
-            bullet.img.pictureLoad().then(() => { // Ensure the image is loaded before adding the bullet
-                ennemyBulletAtUpload.push(bullet);
+            this.projetile.img.pictureLoad().then(() => { // Ensure the image is loaded before adding the bullet
+                ennemyBulletAtUpload.push(this.projetile);
             });
+            this.playerY = playerAtUpload.y; // Update the player's Y position at the time of shooting
             timeBreak = 0;
         }
     }
@@ -88,4 +91,51 @@ class Parrot extends Enemy{
         parrotDesroy = true; // Set the variable to true when the parrot is destroyed
         scoreParrot = true; // Set the variable to true when a parrot is destroyed
     }
+}
+
+class ParrotBoss extends Parrot{
+    hp = 3;
+    damage = 1;
+    yI = 0;
+
+    constructor(img) {
+        super(img);
+        this.img.pictureLoad().then(() => {
+            this.shoot(); // Start shooting when the Parrot is created
+            this.y = (canvasGame.height - this.img.height) / 2; // Center the boss vertically
+
+        });
+    }
+
+    move() {} // Boss does not move
+
+    shoot(){
+        if (Date.now() - this.lastShoot >= this.shotInterval && !breakGame && !gameOver){
+            this.projetile = new ParrotBossAttack(pictures[1], this.x - 10, this.y + this.img.height / 2, this.damage, -20);
+            this.lastShoot = Date.now(); // Update the last spawn time
+            console.log("Boss shooting");
+
+            this.projetile.img.pictureLoad().then(() => { // Ensure the image is loaded before adding the bullet
+                ennemyBulletAtUpload.push(this.projetile);
+                console.log("Bullet ennemy added: ", this.projetile);
+            });
+
+            this.playerY = playerAtUpload.y; // Update the player's Y position at the time of shooting
+            this.yI = (playerAtUpload.y - this.y) / (this.x - playerAtUpload.x + playerAtUpload.width); // Calculate the slope to the player's current position
+
+            timeBreak = 0;
+        }
+        
+    }
+
+    shootUpdate(){
+        if (this.projetile) {
+            this.projetile.y += this.yI * 20;
+        }
+    }
+
+    destroy() {
+        Enemy.prototype.destroy.call(this); //Call Ennemy destroy method
+    }
+
 }

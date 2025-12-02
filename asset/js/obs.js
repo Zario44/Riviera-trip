@@ -266,9 +266,9 @@ class Bomb extends LootBarrel{
     }
 }
 
+let intervalObs = 350; // Interval in milliseconds between obstacle spawns
 
 function spawnObstacle(){
-    const interval = 400; // Interval in milliseconds between obstacle spawns
     const value = 0.5; // Probability value for spawning a obstacle
 
     
@@ -295,7 +295,7 @@ function spawnObstacle(){
                 }
             }
         }
-    }, interval); // Set the interval for spawning obstacles 
+    }, intervalObs); // Set the interval for spawning obstacles 
     
     
 }
